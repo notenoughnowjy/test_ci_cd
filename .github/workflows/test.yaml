@@ -1,0 +1,51 @@
+name: QA IOS Build & Deploy
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest] # iOS는 macOS에서만, Android는 Ubuntu/macOS에서
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run unit/widget tests
+        run: flutter test # 플랫폼별 빌드 없이 유닛/위젯 테스를 실행.
+        # iOS/Android 모두 커버하지만, 네이티브 코드 테스트는 불가.
+        
+      # Android 빌드 및 테스트
+      - name: Build Android APK
+        if: matrix.os == 'ubuntu-latest' # Ubuntu에서 Android 빌드
+        run: flutter build apk --debug
+
+      # iOS 빌드 (macOS에서만 실행)
+      - name: Build iOS
+        if: matrix.os == 'macos-latest' # macOS에서 iOS 빌드
+        run: |
+          flutter build ios --no-codesign --debug
