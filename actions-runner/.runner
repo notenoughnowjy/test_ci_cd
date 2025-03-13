@@ -1,0 +1,9 @@
+﻿{
+  "agentId": 21,
+  "agentName": "JunYoungui-MacBookAir",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus7.actions.githubusercontent.com/eeUPvu9NRIOv4WIiSVbzr7ueFWB1i7iJuqhviTfaunEQAl43UH/",
+  "gitHubUrl": "https://github.com/notenoughnowjy/test_ci_cd",
+  "workFolder": "test_ci_cd"
+}
